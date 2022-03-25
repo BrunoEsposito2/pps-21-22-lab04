@@ -5,7 +5,8 @@ import List.*
 trait Student:
   def name: String
   def year: Int
-  def enrolling(course: Course): Unit // the student participates to a Course
+  // def enrolling(course: Course): Unit // the student participates to a Course
+  def enrolling(course: Course*): Unit
   def courses: List[String] // names of course the student participates to
   def hasTeacher(teacher: String): Boolean // is the student participating to a course of this teacher?
 
@@ -14,10 +15,31 @@ trait Course:
   def teacher: String
 
 object Student:
-  def apply(name: String, year: Int = 2017): Student = ???
+  def apply(name: String, year: Int = 2017): Student =
+    StudentImpl(name, year)
 
 object Course:
-  def apply(name: String, teacher: String): Course = ???
+  def apply(name: String, teacher: String): Course =
+    CourseImpl(name, teacher)
+
+case class StudentImpl(name: String, year: Int) extends Student:
+
+  private var coursesList: List[Course] = Nil()
+
+  //def enrolling(course: Course): Unit =
+    //coursesList = Cons(course, coursesList)
+
+  def enrolling(course: Course*): Unit =
+    for c <- course do coursesList = Cons(c, coursesList)
+
+  def courses: List[String] =
+    map(coursesList)(x => x.name)
+
+  def hasTeacher(teacher: String): Boolean =
+    //find(map(coursesList)(x => x.teacher))(_ == teacher) != Option.None
+    contains(map(coursesList)(x => x.teacher), teacher)
+
+case class CourseImpl(name: String, teacher: String) extends Course
 
 @main def checkStudents(): Unit =
   val cPPS = Course("PPS", "Viroli")
