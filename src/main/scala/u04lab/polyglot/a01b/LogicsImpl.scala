@@ -30,7 +30,7 @@ class LogicsImpl(private val size: Int, private val mines: Int) extends Logics:
       selected += new Pair[Int, Int](x, y)
       OptionToOptional(Some(neighbours(x, y))) // Option => Optional converter
 
-  def won =
+  def won: Boolean =
     selected.size + minesSet.size == size * size
 
   private def neighbours(x: Int, y: Int) =
