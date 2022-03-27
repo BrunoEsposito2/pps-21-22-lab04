@@ -8,8 +8,8 @@ import scala.util.Random
 class LogicsImpl(private val size: Int) extends Logics:
 
   private val gridSize: Int = size
-  private val random = new Random()
-  private val initial: Pair[Int, Int] = new Pair(random.nextInt(size-2)+1, random.nextInt(size-2)+1)
+  private val random = Random()
+  private val initial: Pair[Int, Int] = Pair(random.nextInt(size-2)+1, random.nextInt(size-2)+1)
   private var tickCount: Int = 0
 
   override def tick(): Unit = {tickCount += 1}
