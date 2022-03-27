@@ -60,4 +60,11 @@ object List:
     case _ => Nil()
 
   def take[A](list: List[A], n: Int): List[A] = reverse(drop(reverse(list), length(list) - n))
+
+  // Optional exercise 1
+  def apply[E](head: E*): List[E] =
+    var list: List[E] = Nil()
+    for h <- head.reverse do list = Cons(h, list)
+    list
+  
 end List

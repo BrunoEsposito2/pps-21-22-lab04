@@ -1,12 +1,14 @@
 package u04lab.code
 
 import List.*
+import u04lab.code.Option.Some
+import u04lab.polyglot.OptionToOptional
+import scala.Option.*
 
 trait Student:
   def name: String
   def year: Int
-  // def enrolling(course: Course): Unit // the student participates to a Course
-  def enrolling(course: Course*): Unit
+  def enrolling(course: Course*): Unit // the student participates to a Course
   def courses: List[String] // names of course the student participates to
   def hasTeacher(teacher: String): Boolean // is the student participating to a course of this teacher?
 
@@ -22,24 +24,29 @@ object Course:
   def apply(name: String, teacher: String): Course =
     CourseImpl(name, teacher)
 
+  def unapply(courses: List[Course]): Option[List[Course]] =
+    Some(courses)
+
 case class StudentImpl(name: String, year: Int) extends Student:
-
   private var coursesList: List[Course] = Nil()
-
-  //def enrolling(course: Course): Unit =
-    //coursesList = Cons(course, coursesList)
 
   def enrolling(course: Course*): Unit =
     for c <- course do coursesList = Cons(c, coursesList)
 
   def courses: List[String] =
-    map(coursesList)(x => x.name)
+    map(coursesList)(_.name)
 
   def hasTeacher(teacher: String): Boolean =
     //find(map(coursesList)(x => x.teacher))(_ == teacher) != Option.None
-    contains(map(coursesList)(x => x.teacher), teacher)
+    contains(map(coursesList)(_.teacher), teacher)
 
 case class CourseImpl(name: String, teacher: String) extends Course
+
+//Optional exercise 2
+object sameTeacher:
+  def unapply(courses: List[Course]): scala.Option[String] = courses match
+    case Cons(h, t) if length(filter(t)(_.teacher == h.teacher)) == length(courses) - 1 => scala.Option(h.teacher)
+    case _ => scala.Option.empty
 
 @main def checkStudents(): Unit =
   val cPPS = Course("PPS", "Viroli")
