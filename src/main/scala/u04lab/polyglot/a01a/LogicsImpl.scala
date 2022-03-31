@@ -6,11 +6,12 @@ import scala.collection.immutable.HashSet
 import scala.util.Random
 
 /** solution and descriptions at https://bitbucket.org/mviroli/oop2019-esami/src/master/a01a/sol2/ */
+object LogicsImpl:
+  private val Failures = 5
+
 class LogicsImpl(private val size: Int, private val boat: Int) extends Logics:
 
-  private val FAILURES = 5
-
-  private var hit: Set[Pair[Int, Int]] = Set()
+  private var hits: Set[(Int, Int)] = Set()
 
   private val random = Random()
   private val boatRow: Int = random.nextInt(size)
@@ -23,11 +24,11 @@ class LogicsImpl(private val size: Int, private val boat: Int) extends Logics:
   def hit(row: Int, col: Int) =
     if row == boatRow && col >= boatLeftCol && col < boatLeftCol + boatSize
     then
-      hit + new Pair[Int, Int](row, col)
-      if (hit.size == boatSize) Result.WON else Result.HIT
+      hits + Tuple2(row, col)
+      if (hits.size == boatSize) Result.WON else Result.HIT
     else
       failures += 1
-      if (failures == FAILURES) Result.LOST else Result.MISS
+      if (failures == LogicsImpl.Failures) Result.LOST else Result.MISS
 
   override def toString =
     "x = " + boatLeftCol + " y = " + boatRow
